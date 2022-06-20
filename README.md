@@ -21,6 +21,7 @@ airnut1s:
   #夜间结束时间
   night_end_hour: 0001-01-01 06:00:00
 
+sensor:
 #ip为空气果内网的ip地址，空气果1s共四项数据，分别写六个类型的传感器
   - platform: airnut1s
     ip: "192.168.31.180"

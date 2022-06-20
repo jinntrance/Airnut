@@ -1,9 +1,9 @@
 {
   "domain": "airnut",
-  "name": "1s",
+  "name": "airnut 1s",
   "documentation": "https://github.com/home-assistant/core",
   "dependencies": [],
   "codeowners": [],
   "requirements": [],
-  "version": "3.0.0"
+  "version": "3.0.1"
 }

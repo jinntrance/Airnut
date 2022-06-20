@@ -1,8 +1,7 @@
 """ Constants """
 # Base component constants
 DOMAIN = "airnut"
-VERSION = "1.0.1"
-ISSUE_URL = "https://github.com/billhu1996/Airnut/issues"
+VERSION = "3.0.0"
 ATTRIBUTION = ""
 
 # Configuration

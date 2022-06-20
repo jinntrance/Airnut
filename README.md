@@ -1,4 +1,8 @@
-# 空气果 1S Home Assistant 插件
+# 空气果 1S Home Assistant 插件 
+##HomeAssistant integration For Airnut 1S
+
+### Fork
+该仓库fork来源为[billhu1996](https://github.com/billhu1996)的[Airnut](https://github.com/billhu1996/Airnut)进行功能微调与修改。
 
 ## 接入方式
 
@@ -7,7 +11,7 @@
 3. 通过hacs安装，或者复制文件到custom_components
 4. 进行如下配置
 
-```
+```yaml
 #这个是必须有的
 airnut:
   #夜间是否更新
@@ -17,51 +21,118 @@ airnut:
   #夜间结束时间
   night_end_hour: 0001-01-01 06:00:00
 
-#ip为空气果内网的ip地址，空气果1s共四项数据，分别写四个类型的传感器
-sensor:
+#ip为空气果内网的ip地址，空气果1s共四项数据，分别写六个类型的传感器
   - platform: airnut
-    ip: "192.168.123.61"
+    ip: "192.168.31.180"
     type: co2
   - platform: airnut
-    ip: "192.168.123.61"
+    ip: "192.168.31.180"
     type: temperature
   - platform: airnut
-    ip: "192.168.123.61"
+    ip: "192.168.31.180"
     type: humidity
   - platform: airnut
-    ip: "192.168.123.61"
+    ip: "192.168.31.180"
     type: pm25
+  - platform: airnut
+    ip: "192.168.31.180"
+    type: charge
+  - platform: airnut
+    ip: "192.168.31.180"
+    type: battery
 
 #如果有第二个空气果，可以在下面继续，以此类推
   - platform: airnut
-    ip: "192.168.123.62"
+    ip: "192.168.31.181"
     type: co2
   - platform: airnut
-    ip: "192.168.123.62"
+    ip: "192.168.31.181"
     type: temperature
   - platform: airnut
-    ip: "192.168.123.62"
+    ip: "192.168.31.181"
     type: humidity
   - platform: airnut
-    ip: "192.168.123.62"
+    ip: "192.168.31.181"
     type: pm25
+  - platform: airnut
+    ip: "192.168.31.181"
+    type: charge
+  - platform: airnut
+    ip: "192.168.31.181"
+    type: battery
+```
+图例：
+![img.png](img.png)
+
+## Homekit
+```yaml
+homekit:
+  filter:
+    include_entities:
+    - sensor.airnut_1s_co2
+    - sensor.airnut_1s_pm25
+    - sensor.airnut_1s_temperature
+    - sensor.airnut_1s_humidity
+  entity_config:
+    sensor.airnut_1s_co2:
+      linked_battery_sensor: sensor.airnut_1s_battery
+      low_battery_threshold: 20  #低于多少电显示低电量
+    sensor.airnut_1s_pm25:
+      linked_battery_sensor: sensor.airnut_1s_battery
+      low_battery_threshold: 20
+    sensor.airnut_1s_temperature:
+      linked_battery_sensor: sensor.airnut_1s_battery
+      low_battery_threshold: 20
+    sensor.airnut_1s_humidity:
+      linked_battery_sensor: sensor.airnut_1s_battery
+      low_battery_threshold: 20
+
+      
+homeassistant:
+  customize:
+    sensor.airnut_1s_co2:
+      icon: mdi:molecule-co2
+      device_class: carbon_dioxide
+      friendly_name: 1S二氧化碳
+      
+    sensor.airnut_1s_pm25:
+      icon: mdi:blur
+      device_class: pm25
+      friendly_name: 1S空气质量
+      
+    sensor.airnut_1s_temperature:
+      icon: mdi:thermometer
+      device_class: temperature
+      friendly_name: 1S温度
+      
+    sensor.airnut_1s_humidity:
+      icon: mdi:water-percent
+      device_class: humidity
+      friendly_name: 1S湿度
 
 ```
 
-## 已知问题
+### 注意
+这里不是通过HomeAssistant的UI桥接器接入Homekit,
+而是通过HomeAssistant的configuration.ymal配置，可以将传感器与电量绑定，得到设备的电量信息。
 
+按照上述配置后，重载自定义以及homekit后，配对即可发现设备。
 
-~~在关闭服务的时候无法释放端口。现象是重启ha时，每隔一次启动失败一次，ha日志中有“server got [Errno 98] Address in use”错误。临时的解决办法是再重启一次就好了。~~
-
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 
 ## 其他
-
 我不是利益相关方，只是二手产品购买者。
 
-能抓到的消息格式都直接放在data文件中了，暂时只抓到了主动获取的包，自动上传的包没抓到。
+我不会python，只是有需要自己回去搜索一些相关信息去完善一些集成。如果有大佬可以PR或完善请一定通知一下，共同交流！
 
-有人能知道自动上传的消息格式就好了。
+# 鸣谢：
+- #### 感谢 [hass-xiaomi-miot](https://github.com/al-one/hass-xiaomi-miot) 交流群 @娄凉生 大佬指导configuration.yaml映射HomeKit配件方案。
 
-这一两天休息时间临时搞的，有大佬有时间可以帮忙改改，我python写的不咋样，应该还有bug，我有时间就改。😂
+## 交流
+- QQ群：198841186
 
-最后谢谢之前写斐讯M1局域网接入的大佬，[原贴地址](https://bbs.hassbian.com/thread-4952-1-1.html)
+- 微信群：(添加该机器人，发送“进群”会自动发送邀请链接）
+
+![xiaomi miot weixin group](https://user-images.githubusercontent.com/4549099/161735971-0540ce1c-eb49-4aff-8cb3-3bdad15e22f7.png)
+

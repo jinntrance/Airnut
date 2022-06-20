@@ -111,7 +111,7 @@ homeassistant:
       friendly_name: 1S电量
     sensor.airnut_1s_charge:
       icon: mdi:battery-charging
-      device_class: charging
+      device_class: battery_charging
       friendly_name: 1S充电
 ```
 

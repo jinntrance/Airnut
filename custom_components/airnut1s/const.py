@@ -1,7 +1,7 @@
 """ Constants """
 # Base component constants
 DOMAIN = "airnut1s"
-VERSION = "3.0.3"
+VERSION = "3.0.4"
 ATTRIBUTION = ""
 
 # Configuration
@@ -20,7 +20,7 @@ MEASUREMENT_UNITE_DICT = {
     ATTR_HUMIDITY: "%",
     ATTR_PM25: "ug/m³",
     ATTR_CO2: "ppm",
-    ATTR_BATTERY_CHARGING: "#"
+    ATTR_BATTERY_CHARGING: "#",
     ATTR_BATTERY_LEVEL: "%"
 }
 

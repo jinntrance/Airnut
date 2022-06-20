@@ -1,6 +1,6 @@
 """
 Support for Airnut 1S plant sensor.
-Developer by billhu
+Developer by Chan
 192.168.31.180 apn.airnut.com
 """
 import logging

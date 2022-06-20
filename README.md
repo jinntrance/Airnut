@@ -62,7 +62,7 @@ airnut1s:
     type: battery
 ```
 图例：
-![img.png](img.png)
+![img_3.png](img_3.png)
 
 ## Homekit
 ```yaml
@@ -87,29 +87,32 @@ homekit:
       linked_battery_sensor: sensor.airnut_1s_battery
       low_battery_threshold: 20
 
-      
 homeassistant:
   customize:
     sensor.airnut_1s_co2:
       icon: mdi:molecule-co2
       device_class: carbon_dioxide
       friendly_name: 1S二氧化碳
-      
     sensor.airnut_1s_pm25:
       icon: mdi:blur
       device_class: pm25
       friendly_name: 1S空气质量
-      
     sensor.airnut_1s_temperature:
       icon: mdi:thermometer
       device_class: temperature
       friendly_name: 1S温度
-      
     sensor.airnut_1s_humidity:
       icon: mdi:water-percent
       device_class: humidity
       friendly_name: 1S湿度
-
+    sensor.airnut_1s_battery:
+      icon: mdi:battery
+      device_class: battery
+      friendly_name: 1S电量
+    sensor.airnut_1s_charge:
+      icon: mdi:battery-charging
+      device_class: charging
+      friendly_name: 1S充电
 ```
 
 ### 注意
@@ -124,7 +127,9 @@ homeassistant:
 ## 其他
 我不是利益相关方，只是二手产品购买者。
 
-我不会python，只是有需要自己回去搜索一些相关信息去完善一些集成。如果有大佬可以PR或完善请一定通知一下，共同交流！
+我不会python，只是有需要自己回去搜索一些相关信息去完善一些集成。
+
+如果有大佬可以PR或完善请一定通知一下，共同交流！
 
 # 鸣谢：
 - #### 感谢 [hass-xiaomi-miot](https://github.com/al-one/hass-xiaomi-miot)作者 [@al-one](https://github.com/al-one) 与 交流群 @娄凉生 大佬指导configuration.yaml映射HomeKit配件方案。

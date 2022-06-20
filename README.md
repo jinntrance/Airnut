@@ -63,7 +63,7 @@ sensor:
     type: battery
 ```
 图例：
-![img_3.png](img_3.png)
+![image](https://user-images.githubusercontent.com/6293952/174645193-110457ad-3c3b-4986-8f3c-74f14dfde6ea.png)
 
 ## Homekit
 ```yaml

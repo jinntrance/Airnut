@@ -193,7 +193,7 @@ class Airnut1sSocketServer:
                                 ATTR_TEMPERATURE: format(float(jsonData["param"]["indoor"]["t"]), '.1f'),
                                 ATTR_HUMIDITY: format(float(jsonData["param"]["indoor"]["h"]), '.1f'),
                                 ATTR_CO2: int(jsonData["param"]["indoor"]["co2"]),
-                                ATTR_BATTERY_CHARGING: int(jsonData["param"]["indoor"]["charge"]),
+                                ATTR_BATTERY_CHARGING: "off" if int(jsonData["param"]["indoor"]["charge"]) == 0 else 'on',
                                 ATTR_BATTERY_LEVEL: int(jsonData["param"]["indoor"]["soc"]),
                                 ATTR_TIME: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                             }

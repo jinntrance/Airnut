@@ -20,7 +20,7 @@ MEASUREMENT_UNITE_DICT = {
     ATTR_HUMIDITY: "%",
     ATTR_PM25: "ug/m³",
     ATTR_CO2: "ppm",
-    ATTR_BATTERY_CHARGING: "#",
+    ATTR_BATTERY_CHARGING: "",
     ATTR_BATTERY_LEVEL: "%"
 }
 

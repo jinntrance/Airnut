@@ -20,6 +20,8 @@ from .const import (
     ATTR_VOLUME,
     ATTR_TIME,
     MEASUREMENT_UNITE_DICT,
+    ATTR_BATTERY_CHARGING,
+    ATTR_BATTERY_LEVEL,
 )
 
 CONF_TYPE = "type"
@@ -31,7 +33,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_IP): cv.string,
-    vol.Required(CONF_TYPE): vol.Any(ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_PM25, ATTR_CO2),
+    vol.Required(CONF_TYPE): vol.Any(ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_PM25, ATTR_CO2, ATTR_BATTERY_CHARGING, ATTR_BATTERY_LEVEL),
 })
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -39,7 +41,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     if DOMAIN in hass.data:
         server = hass.data[DOMAIN]['server']
         async_add_entities([AirnutSensor(config, server)],True)
-     
+
 async def async_setup_entry(hass, entry, async_add_entities):
     """Setup sensor platform."""
     if DOMAIN in hass.data:
@@ -89,7 +91,7 @@ class AirnutSensor(Entity):
     def device_state_attributes(self):
         """Return the state of the sensor."""
         return self._state_attrs
-    
+
     @property
     def unit_of_measurement(self):
         """Return the unit this state is expressed in."""

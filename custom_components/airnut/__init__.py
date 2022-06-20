@@ -24,6 +24,8 @@ from .const import (
     ATTR_CO2,
     ATTR_VOLUME,
     ATTR_TIME,
+    ATTR_BATTERY_CHARGING,
+    ATTR_BATTERY_LEVEL,
 )
 
 CONF_NIGHT_START_HOUR = "night_start_hour"
@@ -59,7 +61,7 @@ def setup(hass, config):
     night_end_hour = config[DOMAIN].get(CONF_NIGHT_END_HOUR)
     is_night_update = config[DOMAIN].get(CONF_IS_NIGHT_UPDATE)
     scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
-    
+
     server = AirnutSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval)
 
     hass.data[DOMAIN] = {
@@ -128,7 +130,7 @@ class AirnutSocketServer:
         now_time = datetime.datetime.now()
         if now_time - self._lastUpdateTime < self._scan_interval:
             return True
-        
+
         self._lastUpdateTime = now_time
 
         now_time_str = datetime.datetime.now().strftime("%H%M%S")
@@ -137,14 +139,14 @@ class AirnutSocketServer:
             return True
 
         self.deal_write_sockets(socket_ip_dict.keys())
-        
+
         return True
-    
+
     def deal_error_sockets(self, error_sockets):
         global socket_ip_dict
         for sock in error_sockets:
             del socket_ip_dict[sock]
-    
+
     def deal_read_sockets(self, read_sockets):
         volume_msg = {"sendback_appserver": 100000007,"param": {"volume": 0,"socket_id": 100000007,"check_key": "s_set_volume19085"},"volume": 0,"p": "set_volume","type": "control","check_key": "s_set_volume19085"}
         check_msg = {"sendback_appserver": 100000007,"param": {"socket_id": 100000007,"type": 1,"check_key": "s_get19085"},"p": "get","type": "control","check_key": "s_get19085"}
@@ -165,7 +167,7 @@ class AirnutSocketServer:
                         sockfd.close()
                         del socket_ip_dict[sockfd]
                         continue
-                        
+
                 except OSError:
                     _LOGGER.warning("Client accept failed")
                     continue
@@ -191,6 +193,8 @@ class AirnutSocketServer:
                                 ATTR_TEMPERATURE: format(float(jsonData["param"]["indoor"]["t"]), '.1f'),
                                 ATTR_HUMIDITY: format(float(jsonData["param"]["indoor"]["h"]), '.1f'),
                                 ATTR_CO2: int(jsonData["param"]["indoor"]["co2"]),
+                                ATTR_BATTERY_CHARGING: int(jsonData["param"]["indoor"]["charge"]),
+                                ATTR_BATTERY_LEVEL: int(jsonData["param"]["indoor"]["soc"]),
                                 ATTR_TIME: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                             }
                             _LOGGER.debug("ip_data_dict %s", ip_data_dict)

@@ -127,7 +127,7 @@ homeassistant:
 我不会python，只是有需要自己回去搜索一些相关信息去完善一些集成。如果有大佬可以PR或完善请一定通知一下，共同交流！
 
 # 鸣谢：
-- #### 感谢 [hass-xiaomi-miot](https://github.com/al-one/hass-xiaomi-miot) 交流群 @娄凉生 大佬指导configuration.yaml映射HomeKit配件方案。
+- #### 感谢 [hass-xiaomi-miot](https://github.com/al-one/hass-xiaomi-miot)作者 [@al-one](https://github.com/al-one) 与 交流群 @娄凉生 大佬指导configuration.yaml映射HomeKit配件方案。
 
 ## 交流
 - QQ群：198841186

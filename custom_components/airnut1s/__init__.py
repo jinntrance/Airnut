@@ -1,4 +1,4 @@
-"""Airnut Platform"""
+"""Airnut1s Platform"""
 
 import logging
 import datetime
@@ -62,7 +62,7 @@ def setup(hass, config):
     is_night_update = config[DOMAIN].get(CONF_IS_NIGHT_UPDATE)
     scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
 
-    server = AirnutSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval)
+    server = Airnut1sSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval)
 
     hass.data[DOMAIN] = {
         'server': server
@@ -83,7 +83,7 @@ async def async_unload_entry(hass, entry):
 
     return True
 
-class AirnutSocketServer:
+class Airnut1sSocketServer:
 
     def __init__(self, night_start_hour, night_end_hour, is_night_update, scan_interval):
         self._lastUpdateTime = ZERO_TIME
@@ -220,6 +220,6 @@ class AirnutSocketServer:
 
     def unload(self):
         """Signal shutdown of sock."""
-        _LOGGER.info("AirnutSensor Sock close")
+        _LOGGER.info("Airnut1sSensor Sock close")
         self._socketServer.shutdown(2)
         self._socketServer.close()

@@ -1,7 +1,7 @@
 """
 Support for Airnut 1S plant sensor.
 Developer by billhu
-192.168.123.4 apn.airnut.com
+192.168.31.180 apn.airnut.com
 """
 import logging
 import datetime
@@ -40,23 +40,23 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Setup the sensor platform."""
     if DOMAIN in hass.data:
         server = hass.data[DOMAIN]['server']
-        async_add_entities([AirnutSensor(config, server)],True)
+        async_add_entities([Airnut1sSensor(config, server)],True)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Setup sensor platform."""
     if DOMAIN in hass.data:
         server = hass.data[DOMAIN]['server']
         async_add_entities(
-            [AirnutSensor(entry.data, server)], False,
+            [Airnut1sSensor(entry.data, server)], False,
         )
     return True
 
-class AirnutSensor(Entity):
+class Airnut1sSensor(Entity):
     """Implementing the Airnut 1S sensor."""
 
     def __init__(self, config, server):
         """Initialize the sensor."""
-        _LOGGER.info("AirnutSensor __init__")
+        _LOGGER.info("Airnut1sSensor __init__")
         self.config = config
         self._server = server
         self._type = config.get(CONF_TYPE)
@@ -109,5 +109,5 @@ class AirnutSensor(Entity):
             self._state_attrs[self._type] = self._state
             self._state_attrs[ATTR_TIME] = data[ATTR_TIME]
         except:
-            _LOGGER.info("AirnutSensor get data error with ip %s", self._ip)
+            _LOGGER.info("Airnut1sSensor get data error with ip %s", self._ip)
             return

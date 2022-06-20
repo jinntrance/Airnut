@@ -13,7 +13,7 @@
 
 ```yaml
 #这个是必须有的
-airnut:
+airnut1s:
   #夜间是否更新
   is_night_update: False
   #夜间开始时间
@@ -22,42 +22,42 @@ airnut:
   night_end_hour: 0001-01-01 06:00:00
 
 #ip为空气果内网的ip地址，空气果1s共四项数据，分别写六个类型的传感器
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: co2
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: temperature
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: humidity
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: pm25
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: charge
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.180"
     type: battery
 
 #如果有第二个空气果，可以在下面继续，以此类推
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: co2
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: temperature
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: humidity
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: pm25
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: charge
-  - platform: airnut
+  - platform: airnut1s
     ip: "192.168.31.181"
     type: battery
 ```

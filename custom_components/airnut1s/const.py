@@ -1,7 +1,7 @@
 """ Constants """
 # Base component constants
-DOMAIN = "airnut"
-VERSION = "3.0.2"
+DOMAIN = "airnut1s"
+VERSION = "3.0.3"
 ATTRIBUTION = ""
 
 # Configuration

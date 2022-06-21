@@ -20,9 +20,12 @@ airnut1s:
   night_start_hour: 0001-01-01 23:00:00
   #夜间结束时间
   night_end_hour: 0001-01-01 06:00:00
+  #天气城市代码
+  weathe_code: 101280800
 
 sensor:
-#ip为空气果内网的ip地址，空气果1s共六项数据，分别写六个类型的传感器。（温度、湿度、二氧化碳、PM2.5、电量、是否在充电）
+#ip为空气果内网的ip地址，空气果1s共七项数据，分别写七个类型的传感器。
+#（温度、湿度、二氧化碳、PM2.5、电量、是否在充电，天气）
   - platform: airnut1s
     ip: "192.168.31.180"
     type: co2
@@ -41,6 +44,10 @@ sensor:
   - platform: airnut1s
     ip: "192.168.31.180"
     type: battery
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe
+    
 
 #如果有第二个空气果，可以在下面继续，以此类推
   - platform: airnut1s
@@ -61,9 +68,18 @@ sensor:
   - platform: airnut1s
     ip: "192.168.31.181"
     type: battery
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe
 ```
+###里面的城市天气代码需要改成你所在的城市代码 代码请到这里寻找
+城市代码表
+- https://help.bj.cn/Weathera/20200304/320AD84ECBB0C14FBCF3518941E56179.html 
+- http://api.help.bj.cn/api/CityCode.XLS
+- https://cdn.heweather.com/china-city-list.txt
+
 图例：
-![image](https://user-images.githubusercontent.com/6293952/174645193-110457ad-3c3b-4986-8f3c-74f14dfde6ea.png)
+![img.png](img.png)
 
 ## Homekit
 ```yaml
@@ -113,7 +129,10 @@ homeassistant:
     sensor.airnut_1s_charge:
       icon: mdi:battery-charging
       device_class: battery_charging
-      friendly_name: 1S充电
+      friendly_name: 1S充电    
+    sensor.airnut_1s_weathe:
+      icon: mdi:weather-windy
+      friendly_name: 1S天气
 ```
 
 ### 注意

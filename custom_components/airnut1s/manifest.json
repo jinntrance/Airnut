@@ -3,7 +3,7 @@
   "name": "Airnut 1s",
   "documentation": "https://github.com/home-assistant/core",
   "dependencies": [],
-  "codeowners": [],
+  "codeowners": ["Chan"],
   "requirements": [],
-  "version": "3.0.7"
+  "version": "3.0.8"
 }

@@ -1,7 +1,7 @@
 """ Constants """
 # Base component constants
 DOMAIN = "airnut1s"
-VERSION = "3.0.8"
+VERSION = "3.0.9"
 ATTRIBUTION = ""
 
 # Configuration
@@ -14,6 +14,13 @@ ATTR_TIME = "time"
 ATTR_BATTERY_CHARGING = "charge"
 ATTR_BATTERY_LEVEL = "battery"
 ATTR_WEATHE = "weathe"
+ATTR_WEATHE_TEMP = "weathe_temp"
+ATTR_WEATHE_WIND = "weathe_wind"
+ATTR_WEATHE_AQI = "weathe_aqi"
+ATTR_WEATHE_PM25 = "weathe_pm25"
+ATTR_WEATHE_TOMORROW_STATUS = "weathe_tomorrow_status"
+ATTR_WEATHE_TOMORROW_TEMP = "weathe_tomorrow_temp"
+ATTR_WEATHE_TOMORROW_WIND = "weathe_tomorrow_wind"
 
 #Unit
 MEASUREMENT_UNITE_DICT = {
@@ -24,6 +31,13 @@ MEASUREMENT_UNITE_DICT = {
     ATTR_BATTERY_CHARGING: "",
     ATTR_BATTERY_LEVEL: "%",
     ATTR_WEATHE: "",
+    ATTR_WEATHE_TEMP: "",
+    ATTR_WEATHE_WIND: "",
+    ATTR_WEATHE_AQI: "",
+    ATTR_WEATHE_PM25: "",
+    ATTR_WEATHE_TOMORROW_STATUS: "",
+    ATTR_WEATHE_TOMORROW_TEMP: "",
+    ATTR_WEATHE_TOMORROW_WIND: "",
 }
 
 # Defaults

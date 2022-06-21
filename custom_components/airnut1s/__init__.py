@@ -5,9 +5,10 @@ import datetime
 import json
 import select
 import voluptuous as vol
-import  threading
+import threading
 import time
 import requests
+from urllib import parse
 
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 
@@ -31,6 +32,13 @@ from .const import (
     ATTR_BATTERY_CHARGING,
     ATTR_BATTERY_LEVEL,
     ATTR_WEATHE,
+    ATTR_WEATHE_TEMP,
+    ATTR_WEATHE_WIND,
+    ATTR_WEATHE_AQI,
+    ATTR_WEATHE_PM25,
+    ATTR_WEATHE_TOMORROW_STATUS,
+    ATTR_WEATHE_TOMORROW_TEMP,
+    ATTR_WEATHE_TOMORROW_WIND,
 
 )
 
@@ -45,7 +53,15 @@ ZERO_TIME = datetime.datetime.fromtimestamp(0)
 
 weathestate= 0
 weathe_status = ""
-weathe_code = 101010100
+weathe_temp = ""
+weathe_wind = ""
+weathe_aqi = ""
+weathe_pm25 = ""
+tomorrow = ""
+weathe_tomorrow_status = ""
+weathe_tomorrow_temp = ""
+weathe_tomorrow_wind = ""
+weathe_code = "合肥"
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -55,7 +71,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_NIGHT_END_HOUR, default=ZERO_TIME): cv.datetime,
                 vol.Optional(CONF_IS_NIGHT_UPDATE, default=True): cv.boolean,
                 vol.Optional(CONF_SCAN_INTERVAL, default=SCAN_INTERVAL): cv.time_period,
-                vol.Optional(CONF_WEATHE_CODE, default="101010100"): cv.string,
+                vol.Optional(CONF_WEATHE_CODE, default="合肥"): cv.string,
             }
         )
     },
@@ -88,26 +104,46 @@ def setup(hass, config):
 def func_weather():
     global weathestate
     global weathe_status
+    global weathe_temp
+    global weathe_wind
+    global weathe_aqi
+    global weathe_pm25
+    global weathe_tomorrow_status
+    global weathe_tomorrow_temp
+    global weathe_tomorrow_wind
     global weathe_code
     errcount = 0
     wet_dataA={"晴":0,"阴":1,"多云":1,"雨":3,"阵雨":3,"雷阵雨":3,"雷阵雨伴有冰雹":3,"雨夹雪":6,"小雨":3,"中雨":3,"大雨":3,"暴雨":3,"大暴雨":3,"特大暴雨":3,"阵雪":5,"小雪":5,"中雪":5,"大雪":5,"暴雪":5,"雾":2,"冻雨":6,"沙尘暴":2,"小雨转中雨":3,"中雨转大雨":3,"大雨转暴雨":3,"暴雨转大暴雨":3,"大暴雨转特大暴雨":3,"小雪转中雪":5,"中雪转大雪":5,"大雪转暴雪":5,"浮沉":2,"扬沙":2,"强沙尘暴":2,"霾":2}
-    header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'}
+    header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36'}
+    _LOGGER.warning("1S weathe_code %s", weathe_code )
+    _LOGGER.warning("1S url %s", parse.quote(str(weathe_code)))
     while True:
         datayesorno = False
         try:
-            res = requests.get('https://api.help.bj.cn/apis/weather/?id='+str(weathe_code),headers=header)
+            res = requests.get('https://api.help.bj.cn/apis/weather2d/?id='+ parse.quote(str(weathe_code)),headers=header)
+#             res = requests.get('https://api.help.bj.cn/apis/weather/?id='+str(weathe_code),headers=header)
             #print('https://api.help.bj.cn/apis/weather/?id='+str(weathe_code))
             res.encoding='utf-8'
             if res.status_code==200:
                 jsonData = res.json()
                 jsonwt = jsonData['weather']
                 datayesorno = True
+                _LOGGER.warning("1S res %s", res.json())
+                _LOGGER.warning("1S weather %s", jsonData['weather'])
                 #print(jsonData)
         except:
             continue
         if datayesorno:
             print(jsonData['weather'])
             weathe_status = jsonData['weather']
+            weathe_temp = jsonData['temp']
+            weathe_wind = jsonData['wind']
+            weathe_aqi = jsonData['aqi']
+            weathe_pm25 = jsonData['pm25']
+            tomorrow = jsonData.get("tomorrow")
+            weathe_tomorrow_status = tomorrow['weather']
+            weathe_tomorrow_temp = tomorrow['temp']
+            weathe_tomorrow_wind = tomorrow['wind']
             try:
                 weathestate = wet_dataA[jsonData['weather']]
             except:
@@ -267,6 +303,13 @@ class Airnut1sSocketServer:
                                 ATTR_BATTERY_LEVEL: int(jsonData["param"]["indoor"]["soc"]),
                                 ATTR_TIME: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                 ATTR_WEATHE: weathe_status,
+                                ATTR_WEATHE_TEMP: weathe_temp,
+                                ATTR_WEATHE_WIND: weathe_wind,
+                                ATTR_WEATHE_AQI: weathe_aqi,
+                                ATTR_WEATHE_PM25: weathe_pm25,
+                                ATTR_WEATHE_TOMORROW_STATUS: weathe_tomorrow_status,
+                                ATTR_WEATHE_TOMORROW_TEMP: weathe_tomorrow_temp,
+                                ATTR_WEATHE_TOMORROW_WIND: weathe_tomorrow_wind,
                             }
                             _LOGGER.debug("ip_data_dict %s", ip_data_dict)
 

@@ -20,8 +20,8 @@ airnut1s:
   night_start_hour: 0001-01-01 23:00:00
   #夜间结束时间
   night_end_hour: 0001-01-01 06:00:00
-  #天气城市代码
-  weathe_code: 101280800
+  #天气城市名称 列表在下方
+  weathe_code: "北京"
 
 sensor:
 #ip为空气果内网的ip地址，空气果1s共七项数据，分别写七个类型的传感器。
@@ -44,9 +44,38 @@ sensor:
   - platform: airnut1s
     ip: "192.168.31.180"
     type: battery
+    # 当日天气
   - platform: airnut1s
     ip: "192.168.31.180"
     type: weathe
+    # 当日气温
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_temp
+    # 当日风量
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_wind
+    # 当日空气指数
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_aqi
+    # 当日PM2.5
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_pm25
+    # 明日天气
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_tomorrow_status
+    # 明日气温
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_tomorrow_temp
+    # 明日风量
+  - platform: airnut1s
+    ip: "192.168.31.180"
+    type: weathe_tomorrow_wind
     
 
 #如果有第二个空气果，可以在下面继续，以此类推
@@ -68,16 +97,44 @@ sensor:
   - platform: airnut1s
     ip: "192.168.31.181"
     type: battery
+    # 当日天气
   - platform: airnut1s
-    ip: "192.168.31.180"
+    ip: "192.168.31.181"
     type: weathe
+    # 当日气温
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_temp
+    # 当日风量
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_wind
+    # 当日空气指数
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_aqi
+    # 当日PM2.5
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_pm25
+    # 明日天气
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_tomorrow_status
+    # 明日气温
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_tomorrow_temp
+    # 明日风量
+  - platform: airnut1s
+    ip: "192.168.31.181"
+    type: weathe_tomorrow_wind
 ```
-###里面的城市天气代码需要改成你所在的城市代码 代码请到这里寻找
+###里面的城市天气代码需要改成你所在的城市名称 请到这里寻找，如果没有你的地区，找个相近的即可。
 城市代码表
-- https://help.bj.cn/Weathera/20200304/320AD84ECBB0C14FBCF3518941E56179.html 
-- http://api.help.bj.cn/api/CityCode.XLS
-- https://cdn.heweather.com/china-city-list.txt
-- 天气每隔10分钟更新一次，可谓聊胜于无
+- 下载 http://api.help.bj.cn/api/CityCode.XLS
+- 或 [CityCode.XLS](CityCode.XLS)
+- 天气每隔10分钟更新一次（计划后期做成可自定义的）
 
 ###如果遇到时间不准确，或者是utc时间，请看下面
 - 找到项目里面的_init_.py文件，找到下面
@@ -96,7 +153,7 @@ sensor:
 ####请自行测试那一条适用，导致这个原因是docker环境或者主机环境时区问题影响,每个设备不能同时照顾
 
 ###图例：
-![img.png](img.png)
+![img_3.png](img_3.png)
 
 ## Homekit
 ```yaml
@@ -147,9 +204,32 @@ homeassistant:
       icon: mdi:battery-charging
       device_class: battery_charging
       friendly_name: 1S充电    
+      
     sensor.airnut_1s_weathe:
+      icon: mdi:sun-wireless
+      friendly_name: 1S今日天气
+    sensor.airnut_1s_weathe_temp:
+      icon: mdi:thermometer
+      friendly_name: 1S今日城市气温
+    sensor.airnut_1s_weathe_wind:
       icon: mdi:weather-windy
-      friendly_name: 1S天气
+      friendly_name: 1S今日风量
+    sensor.airnut_1s_weathe_aqi:
+      icon: mdi:blur
+      friendly_name: 1S今日AQI
+    sensor.airnut_1s_weathe_pm25:
+      icon: mdi:blur
+      friendly_name: 1S今日PM2.5
+
+    sensor.airnut_1s_weathe_tomorrow_status:
+      icon: mdi:sun-wireless
+      friendly_name: 1S明日天气
+    sensor.airnut_1s_weathe_tomorrow_temp:
+      icon: mdi:thermometer
+      friendly_name: 1S明日气温
+    sensor.airnut_1s_weathe_tomorrow_wind:
+      icon: mdi:weather-windy
+      friendly_name: 1S明日风量
 ```
 
 ### 注意

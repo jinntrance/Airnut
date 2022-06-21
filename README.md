@@ -77,8 +77,25 @@ sensor:
 - https://help.bj.cn/Weathera/20200304/320AD84ECBB0C14FBCF3518941E56179.html 
 - http://api.help.bj.cn/api/CityCode.XLS
 - https://cdn.heweather.com/china-city-list.txt
+- 天气每隔10分钟更新一次，可谓聊胜于无
 
-图例：
+###如果遇到时间不准确，或者是utc时间，请看下面
+- 找到项目里面的_init_.py文件，找到下面
+```python
+  def get_time_unix():
+  return int((datetime.datetime.now() + datetime.timedelta(hours=8)).timestamp())
+```
+  改成
+```python
+  return int((datetime.datetime.now() + datetime.timedelta(hours=8)).timestamp())
+```
+  或者
+```python
+  return int((datetime.datetime.utcnow() + datetime.timedelta(hours=8)).timestamp())
+```
+####请自行测试那一条适用，导致这个原因是docker环境或者主机环境时区问题影响,每个设备不能同时照顾
+
+###图例：
 ![img.png](img.png)
 
 ## Homekit

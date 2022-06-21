@@ -61,7 +61,7 @@ tomorrow = ""
 weathe_tomorrow_status = ""
 weathe_tomorrow_temp = ""
 weathe_tomorrow_wind = ""
-weathe_code = "合肥"
+weathe_code = "北京"
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -71,7 +71,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_NIGHT_END_HOUR, default=ZERO_TIME): cv.datetime,
                 vol.Optional(CONF_IS_NIGHT_UPDATE, default=True): cv.boolean,
                 vol.Optional(CONF_SCAN_INTERVAL, default=SCAN_INTERVAL): cv.time_period,
-                vol.Optional(CONF_WEATHE_CODE, default="合肥"): cv.string,
+                vol.Optional(CONF_WEATHE_CODE, default="北京"): cv.string,
             }
         )
     },
@@ -84,6 +84,7 @@ ip_data_dict = {}
 socket_ip_dict = {}
 
 def setup(hass, config):
+    global weathe_code
     """Set up platform using YAML."""
     night_start_hour = config[DOMAIN].get(CONF_NIGHT_START_HOUR)
     night_end_hour = config[DOMAIN].get(CONF_NIGHT_END_HOUR)
@@ -91,7 +92,7 @@ def setup(hass, config):
     scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
     weathe_code = config[DOMAIN].get(CONF_WEATHE_CODE)
 
-    run_weather = threading.Thread(target=func_weather)  #新建天气循环线程
+    run_weather = threading.Thread(target=airnut1s_weather)  #新建天气循环线程
     run_weather.start()
 
     server = Airnut1sSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval, weathe_code, config)
@@ -101,7 +102,7 @@ def setup(hass, config):
     }
     return True
 
-def func_weather():
+def airnut1s_weather():
     global weathestate
     global weathe_status
     global weathe_temp
@@ -115,8 +116,7 @@ def func_weather():
     errcount = 0
     wet_dataA={"晴":0,"阴":1,"多云":1,"雨":3,"阵雨":3,"雷阵雨":3,"雷阵雨伴有冰雹":3,"雨夹雪":6,"小雨":3,"中雨":3,"大雨":3,"暴雨":3,"大暴雨":3,"特大暴雨":3,"阵雪":5,"小雪":5,"中雪":5,"大雪":5,"暴雪":5,"雾":2,"冻雨":6,"沙尘暴":2,"小雨转中雨":3,"中雨转大雨":3,"大雨转暴雨":3,"暴雨转大暴雨":3,"大暴雨转特大暴雨":3,"小雪转中雪":5,"中雪转大雪":5,"大雪转暴雪":5,"浮沉":2,"扬沙":2,"强沙尘暴":2,"霾":2}
     header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36'}
-    _LOGGER.warning("1S weathe_code %s", weathe_code )
-    _LOGGER.warning("1S url %s", parse.quote(str(weathe_code)))
+    #_LOGGER.warning("1S weathe_code %s", weathe_code )
     while True:
         datayesorno = False
         try:
@@ -128,8 +128,7 @@ def func_weather():
                 jsonData = res.json()
                 jsonwt = jsonData['weather']
                 datayesorno = True
-                _LOGGER.warning("1S res %s", res.json())
-                _LOGGER.warning("1S weather %s", jsonData['weather'])
+                #_LOGGER.warning("1S res %s", res.json())
                 #print(jsonData)
         except:
             continue

@@ -13,6 +13,7 @@ ATTR_VOLUME = "volume"
 ATTR_TIME = "time"
 ATTR_BATTERY_CHARGING = "charge"
 ATTR_BATTERY_LEVEL = "battery"
+ATTR_WEATHE = "weathe"
 
 #Unit
 MEASUREMENT_UNITE_DICT = {
@@ -21,7 +22,8 @@ MEASUREMENT_UNITE_DICT = {
     ATTR_PM25: "ug/m³",
     ATTR_CO2: "ppm",
     ATTR_BATTERY_CHARGING: "",
-    ATTR_BATTERY_LEVEL: "%"
+    ATTR_BATTERY_LEVEL: "%",
+    ATTR_WEATHE: "",
 }
 
 # Defaults

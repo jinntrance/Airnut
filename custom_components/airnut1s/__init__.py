@@ -5,6 +5,10 @@ import datetime
 import json
 import select
 import voluptuous as vol
+import  threading
+import time
+import requests
+
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 
 from homeassistant.config_entries import ConfigEntry
@@ -26,15 +30,22 @@ from .const import (
     ATTR_TIME,
     ATTR_BATTERY_CHARGING,
     ATTR_BATTERY_LEVEL,
+    ATTR_WEATHE,
+
 )
 
 CONF_NIGHT_START_HOUR = "night_start_hour"
 CONF_NIGHT_END_HOUR = "night_end_hour"
 CONF_IS_NIGHT_UPDATE = "is_night_update"
 HOST_IP = "0.0.0.0"
+CONF_WEATHE_CODE = "weathe_code"
 
 SCAN_INTERVAL = datetime.timedelta(seconds=600)
 ZERO_TIME = datetime.datetime.fromtimestamp(0)
+
+weathestate= 0
+weathe_status = ""
+weathe_code = 101010100
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -44,6 +55,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_NIGHT_END_HOUR, default=ZERO_TIME): cv.datetime,
                 vol.Optional(CONF_IS_NIGHT_UPDATE, default=True): cv.boolean,
                 vol.Optional(CONF_SCAN_INTERVAL, default=SCAN_INTERVAL): cv.time_period,
+                vol.Optional(CONF_WEATHE_CODE, default="101010100"): cv.string,
             }
         )
     },
@@ -61,13 +73,61 @@ def setup(hass, config):
     night_end_hour = config[DOMAIN].get(CONF_NIGHT_END_HOUR)
     is_night_update = config[DOMAIN].get(CONF_IS_NIGHT_UPDATE)
     scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
+    weathe_code = config[DOMAIN].get(CONF_WEATHE_CODE)
 
-    server = Airnut1sSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval)
+    run_weather = threading.Thread(target=func_weather)  #新建天气循环线程
+    run_weather.start()
+
+    server = Airnut1sSocketServer(night_start_hour, night_end_hour, is_night_update, scan_interval, weathe_code, config)
 
     hass.data[DOMAIN] = {
         'server': server
     }
     return True
+
+def func_weather():
+    global weathestate
+    global weathe_status
+    global weathe_code
+    errcount = 0
+    wet_dataA={"晴":0,"阴":1,"多云":1,"雨":3,"阵雨":3,"雷阵雨":3,"雷阵雨伴有冰雹":3,"雨夹雪":6,"小雨":3,"中雨":3,"大雨":3,"暴雨":3,"大暴雨":3,"特大暴雨":3,"阵雪":5,"小雪":5,"中雪":5,"大雪":5,"暴雪":5,"雾":2,"冻雨":6,"沙尘暴":2,"小雨转中雨":3,"中雨转大雨":3,"大雨转暴雨":3,"暴雨转大暴雨":3,"大暴雨转特大暴雨":3,"小雪转中雪":5,"中雪转大雪":5,"大雪转暴雪":5,"浮沉":2,"扬沙":2,"强沙尘暴":2,"霾":2}
+    header = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'}
+    while True:
+        datayesorno = False
+        try:
+            res = requests.get('https://api.help.bj.cn/apis/weather/?id='+str(weathe_code),headers=header)
+            #print('https://api.help.bj.cn/apis/weather/?id='+str(weathe_code))
+            res.encoding='utf-8'
+            if res.status_code==200:
+                jsonData = res.json()
+                jsonwt = jsonData['weather']
+                datayesorno = True
+                #print(jsonData)
+        except:
+            continue
+        if datayesorno:
+            print(jsonData['weather'])
+            weathe_status = jsonData['weather']
+            try:
+                weathestate = wet_dataA[jsonData['weather']]
+            except:
+                continue
+            errcount = 0
+            time.sleep(600)
+        else:
+            errcount = errcount + 1
+            if errcount >= 3:
+                errcount = 0
+                #print(res.text())
+                time.sleep(600)
+            else:
+                time.sleep(30)
+
+def get_time():
+    return (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M:%S")
+
+def get_time_unix():
+    return int((datetime.datetime.now() + datetime.timedelta(hours=8)).timestamp())
 
 async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
     hass.async_create_task(
@@ -85,12 +145,15 @@ async def async_unload_entry(hass, entry):
 
 class Airnut1sSocketServer:
 
-    def __init__(self, night_start_hour, night_end_hour, is_night_update, scan_interval):
+    def __init__(self, night_start_hour, night_end_hour, is_night_update, scan_interval, weathe_code, config):
         self._lastUpdateTime = ZERO_TIME
         self._night_start_hour = night_start_hour.strftime("%H%M%S")
         self._night_end_hour = night_end_hour.strftime("%H%M%S")
         self._is_night_update = is_night_update
         self._scan_interval = scan_interval
+
+        self._weathe_code = weathe_code
+        self._config = config
 
         self._socketServer = socket(AF_INET, SOCK_STREAM)
         self._socketServer.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -150,6 +213,13 @@ class Airnut1sSocketServer:
     def deal_read_sockets(self, read_sockets):
         volume_msg = {"sendback_appserver": 100000007,"param": {"volume": 0,"socket_id": 100000007,"check_key": "s_set_volume19085"},"volume": 0,"p": "set_volume","type": "control","check_key": "s_set_volume19085"}
         check_msg = {"sendback_appserver": 100000007,"param": {"socket_id": 100000007,"type": 1,"check_key": "s_get19085"},"p": "get","type": "control","check_key": "s_get19085"}
+
+        global weathestate
+        weathe_msg = {"common": {"code": 0, "protocol": "get_weather"}, "param": {"weather": "weathercode", "time": get_time_unix()}}
+        weathe_msg=json.dumps(weathe_msg)
+        weathe_msg=weathe_msg.replace("weathercode",str(weathestate))
+        weathe_msg=json.loads(weathe_msg)
+
         global ip_data_dict
         for sock in read_sockets:
             if sock == self._socketServer:
@@ -196,11 +266,13 @@ class Airnut1sSocketServer:
                                 ATTR_BATTERY_CHARGING: "off" if int(jsonData["param"]["indoor"]["charge"]) == 0 else 'on',
                                 ATTR_BATTERY_LEVEL: int(jsonData["param"]["indoor"]["soc"]),
                                 ATTR_TIME: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                ATTR_WEATHE: weathe_status,
                             }
                             _LOGGER.debug("ip_data_dict %s", ip_data_dict)
 
     def deal_write_sockets(self, write_sockets):
         global socket_ip_dict
+        global weathestate
         check_msg = {"sendback_appserver": 100000007,"param": {"socket_id": 100000007,"type": 1,"check_key": "s_get19085"},"p": "get","type": "control","check_key": "s_get19085"}
         for sock in write_sockets:
             if sock == self._socketServer:

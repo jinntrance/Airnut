@@ -22,6 +22,7 @@ from .const import (
     MEASUREMENT_UNITE_DICT,
     ATTR_BATTERY_CHARGING,
     ATTR_BATTERY_LEVEL,
+    ATTR_WEATHE
 )
 
 CONF_TYPE = "type"
@@ -33,7 +34,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_IP): cv.string,
-    vol.Required(CONF_TYPE): vol.Any(ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_PM25, ATTR_CO2, ATTR_BATTERY_CHARGING, ATTR_BATTERY_LEVEL),
+    vol.Required(CONF_TYPE): vol.Any(ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_PM25, ATTR_CO2, ATTR_BATTERY_CHARGING, ATTR_BATTERY_LEVEL, ATTR_WEATHE),
 })
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):

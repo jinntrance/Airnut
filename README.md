@@ -1,6 +1,8 @@
 # 空气果 1S Home Assistant 插件 
 ## HomeAssistant integration For Airnut 1S
 
+![yaofan](https://user-images.githubusercontent.com/6293952/196037499-17ef6aec-9fe4-4fc2-a4ac-811a12bfb380.jpg)
+
 ### Fork
 该仓库fork来源为[billhu1996](https://github.com/billhu1996)的[Airnut](https://github.com/billhu1996/Airnut)进行功能微调与修改。
 

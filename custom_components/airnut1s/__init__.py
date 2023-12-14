@@ -27,6 +27,7 @@ from .const import (
     ATTR_HUMIDITY,
     ATTR_PM25,
     ATTR_CO2,
+    ATTR_CH2O,
     ATTR_VOLUME,
     ATTR_TIME,
     ATTR_BATTERY_CHARGING,
@@ -193,7 +194,10 @@ class Airnut1sSocketServer:
         self._socketServer = socket(AF_INET, SOCK_STREAM)
         self._socketServer.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         try:
+            # port for Airnut 1s
             self._socketServer.bind((HOST_IP, 10511))
+            # port for Airnut 2
+            self._socketServer.bind((HOST_IP, 10512))
             self._socketServer.listen(5)
         except OSError as e:
             _LOGGER.error("server got %s", e)
@@ -298,6 +302,7 @@ class Airnut1sSocketServer:
                                 ATTR_TEMPERATURE: format(float(jsonData["param"]["indoor"]["t"]), '.1f'),
                                 ATTR_HUMIDITY: format(float(jsonData["param"]["indoor"]["h"]), '.1f'),
                                 ATTR_CO2: int(jsonData["param"]["indoor"]["co2"]),
+                                ATTR_CH2O: int(jsonData["param"]["indoor"]["hcho"]),
                                 ATTR_BATTERY_CHARGING: "off" if int(jsonData["param"]["indoor"]["charge"]) == 0 else 'on',
                                 ATTR_BATTERY_LEVEL: int(jsonData["param"]["indoor"]["soc"]),
                                 ATTR_TIME: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

@@ -9,6 +9,7 @@ ATTR_TEMPERATURE = "temperature"
 ATTR_HUMIDITY = "humidity"
 ATTR_PM25 = "pm25"
 ATTR_CO2 = "co2"
+ATTR_CH2O = "ch2o"
 ATTR_VOLUME = "volume"
 ATTR_TIME = "time"
 ATTR_BATTERY_CHARGING = "charge"
@@ -28,6 +29,7 @@ MEASUREMENT_UNITE_DICT = {
     ATTR_HUMIDITY: "%",
     ATTR_PM25: "ug/m³",
     ATTR_CO2: "ppm",
+    ATTR_CH2O: "ug/m³",
     ATTR_BATTERY_CHARGING: "",
     ATTR_BATTERY_LEVEL: "%",
     ATTR_WEATHE: "",
